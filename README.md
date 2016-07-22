@@ -1,1 +1,1 @@
-# test-docker-swarm
+Setup a swarm cluster in vagrant boxes
