@@ -13,13 +13,20 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
 
-  config.vm.provision "shell", inline: "echo Hello"
+  config.vm.provision "shell", inline: "echo Hello && uname -r"
+
+  #
+  # Run Ansible from the Vagrant Host
+  #
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
 
 
   config.vm.define "ubuntu1" do |ubuntu1|
       ubuntu1.vm.box = "ubuntu/trusty64"
   end
-
+  
   config.vm.define "ubuntu2" do |ubuntu2|
       ubuntu2.vm.box = "ubuntu/trusty64"
   end
