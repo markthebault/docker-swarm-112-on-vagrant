@@ -5,6 +5,13 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+
+BOXE_IMG="ubuntu/trusty64"
+SWARM_MASTER_IP="192.168.33.10"
+SWARM_MASTER_PORT=2377
+
+Vagrant.require_version ">= 1.8.1"
+
 Vagrant.configure(2) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -13,26 +20,47 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
 
-  config.vm.provision "shell", inline: "echo Hello && uname -r"
+  config.vm.provision "shell", inline: <<-SHELL
+    echo Hello
+    uname -r
+  SHELL
 
-  #
+
+  config.vm.define "master" do |master|
+      master.vm.box = BOXE_IMG
+      master.vm.network "private_network", ip: SWARM_MASTER_IP
+      master.vm.hostname = "master"
+  end
+
+  config.vm.define "node1" do |node1|
+      node1.vm.box = BOXE_IMG
+      node1.vm.network "private_network", ip: "192.168.33.11"
+      node1.vm.hostname = "node1"
+  end
+
+  config.vm.define "node2" do |node2|
+      node2.vm.box = BOXE_IMG
+      node2.vm.network "private_network", ip: "192.168.33.12"
+      node2.vm.hostname = "node2"
+  end
+
+
   # Run Ansible from the Vagrant Host
-  #
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook.yml"
-  end
+    ansible.playbook = "provisioning/playbook.yml"
+    ansible.groups = {
+      "nodes" => ["node[1:2]"],
+      "master" => ["master"],
+      "all_groups:children" => ["master", "nodes"],
 
 
-  config.vm.define "ubuntu1" do |ubuntu1|
-      ubuntu1.vm.box = "ubuntu/trusty64"
-  end
-  
-  config.vm.define "ubuntu2" do |ubuntu2|
-      ubuntu2.vm.box = "ubuntu/trusty64"
-  end
-
-  config.vm.define "ubuntu3" do |ubuntu3|
-      ubuntu3.vm.box = "ubuntu/trusty64"
+      "nodes:vars" => {
+        "SWARM_MASTER_IP" => SWARM_MASTER_IP,
+        "SWARM_MASTER_PORT" => SWARM_MASTER_PORT},
+      "master:vars" => {
+        "SWARM_MASTER_IP" => SWARM_MASTER_IP,
+        "SWARM_MASTER_PORT" => SWARM_MASTER_PORT}
+    }
   end
 
 

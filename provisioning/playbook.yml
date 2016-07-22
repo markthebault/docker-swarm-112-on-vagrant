@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- hosts: all_groups
+  gather_facts: True
   sudo: true
   tasks:
     #################INSTALL DOCKER
@@ -43,3 +44,24 @@
     - command: docker --version
       register: dockerV
     - debug: var=dockerV.stdout_lines
+
+
+
+
+- hosts: master
+  sudo: true
+  gather_facts: True
+  tasks:
+    - command: docker swarm leave --force
+    - command: docker swarm init --listen-addr {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"
+      register: masterSwarmInit
+    - debug: var=masterSwarmInit.stdout_lines
+
+
+- hosts: nodes
+  gather_facts: True
+  sudo: true
+  tasks:
+    # - command: echo {{hostvars.master}} | tail -n 3
+    #   register: ech
+    # - debug: var=ech.stdout_lines
