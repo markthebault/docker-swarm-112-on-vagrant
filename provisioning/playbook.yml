@@ -1,7 +1,9 @@
 ---
 - hosts: all_groups
+  remote_user: root
+  become: yes
+  become_method: sudo
   gather_facts: True
-  sudo: true
   tasks:
     #################INSTALL DOCKER
     - name: update apt cache
@@ -48,20 +50,29 @@
 
 
 
-- hosts: master
-  sudo: true
+- hosts: masters
+  remote_user: root
+  become: yes
+  become_method: sudo
   gather_facts: True
   tasks:
-    - command: docker swarm leave --force
-    - command: docker swarm init --listen-addr {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"
-      register: masterSwarmInit
-    - debug: var=masterSwarmInit.stdout_lines
+    - name: Clean all previous swarms clusters
+      command: docker swarm leave --force
+      ignore_errors: yes
+
+    - name: Create a swamr cluster
+      command: docker swarm init --listen-addr {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"
 
 
 - hosts: nodes
+  remote_user: root
+  become: yes
+  become_method: sudo
   gather_facts: True
-  sudo: true
   tasks:
-    # - command: echo {{hostvars.master}} | tail -n 3
-    #   register: ech
-    # - debug: var=ech.stdout_lines
+    - name: Clean all previous swarms clusters
+      command: docker swarm leave --force
+      ignore_errors: yes
+      
+    - name: Join swarm cluster
+      command: docker swarm join --listen-addr {{ ansible_eth1.ipv4.address }}:{{ SWARM_MASTER_PORT }} {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"

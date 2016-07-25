@@ -50,14 +50,14 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "provisioning/playbook.yml"
     ansible.groups = {
       "nodes" => ["node[1:2]"],
-      "master" => ["master"],
-      "all_groups:children" => ["master", "nodes"],
+      "masters" => ["master"],
+      "all_groups:children" => ["masters", "nodes"],
 
 
       "nodes:vars" => {
         "SWARM_MASTER_IP" => SWARM_MASTER_IP,
         "SWARM_MASTER_PORT" => SWARM_MASTER_PORT},
-      "master:vars" => {
+      "masters:vars" => {
         "SWARM_MASTER_IP" => SWARM_MASTER_IP,
         "SWARM_MASTER_PORT" => SWARM_MASTER_PORT}
     }
