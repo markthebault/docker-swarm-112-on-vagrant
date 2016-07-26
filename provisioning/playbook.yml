@@ -26,10 +26,6 @@
     - name: update apt cache
       apt: update_cache=yes
 
-    #Not working
-    # - name: purge previous version
-    #   apt: name=lxc-docker purge=yes
-
     - name: update apt cache
       apt: update_cache=yes
 
@@ -63,6 +59,9 @@
     - name: Create a swamr cluster
       command: docker swarm init --listen-addr {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"
 
+    - name: Run the swamr visualizer
+      command: docker run -it -d -p 8080:8080 -e HOST={{ SWARM_MASTER_IP }} --name swamr-visu -v /var/run/docker.sock:/var/run/docker.sock manomarks/visualizer
+
 
 - hosts: nodes
   remote_user: root
@@ -73,6 +72,6 @@
     - name: Clean all previous swarms clusters
       command: docker swarm leave --force
       ignore_errors: yes
-      
+
     - name: Join swarm cluster
       command: docker swarm join --listen-addr {{ ansible_eth1.ipv4.address }}:{{ SWARM_MASTER_PORT }} {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"
