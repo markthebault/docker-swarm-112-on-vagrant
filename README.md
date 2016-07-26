@@ -10,5 +10,12 @@ This mean of this project if to demonstrate capabilites of docker swarm 1.12 on 
 ## Run the environment
 To start using the cluster just use `vagrant up`
 
+## Running an Example
+- This example will just start an HelloWorld Container [Image can be found here](https://github.com/tutumcloud/hello-world)
+- Connect to the master node `vagrant ssh master`
+- Run the docker command `sudo docker service create --replicas 4 --name helloworld -p 8081:80 tutum/hello-world`
+- Go on the URL `192.169.33.10:8081` and you will see "Hello World"
+- Go back on the UI of swarm `192.169.33.10:3000` and you will see 4 containers
+
 ## Clean the environment
 To delete every thing made by this project just run the following command `vagrant destroy`
