@@ -26,26 +26,26 @@ Vagrant.configure(2) do |config|
     uname -r
   SHELL
 
+  config.vm.provider "virtualbox" do |v|
+    v.memory = BOX_RAM
+  end
 
   config.vm.define "master" do |master|
       master.vm.box = BOXE_IMG
       master.vm.network "private_network", ip: SWARM_MASTER_IP
       master.vm.hostname = "master"
-      master.memory = BOX_RAM
   end
 
   config.vm.define "node1" do |node1|
       node1.vm.box = BOXE_IMG
       node1.vm.network "private_network", ip: "192.168.33.11"
       node1.vm.hostname = "node1"
-      master.memory = BOX_RAM
   end
 
   config.vm.define "node2" do |node2|
       node2.vm.box = BOXE_IMG
       node2.vm.network "private_network", ip: "192.168.33.12"
       node2.vm.hostname = "node2"
-      master.memory = BOX_RAM
   end
 
 
