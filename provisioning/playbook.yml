@@ -52,15 +52,11 @@
   become_method: sudo
   gather_facts: True
   tasks:
-    - name: Clean all previous swarms clusters
-      command: docker swarm leave --force
-      ignore_errors: yes
-
     - name: Create a swamr cluster
       command: docker swarm init --listen-addr {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"
 
     - name: Run the swamr visualizer
-      command: docker run -it -d -p 8080:8080 -e HOST={{ SWARM_MASTER_IP }} --name swamr-visu -v /var/run/docker.sock:/var/run/docker.sock manomarks/visualizer
+      command: docker run -it -d -p 3000:8080 -e HOST={{ SWARM_MASTER_IP }} --name swamr-visu -v /var/run/docker.sock:/var/run/docker.sock manomarks/visualizer
 
 
 - hosts: nodes
@@ -69,9 +65,5 @@
   become_method: sudo
   gather_facts: True
   tasks:
-    - name: Clean all previous swarms clusters
-      command: docker swarm leave --force
-      ignore_errors: yes
-
     - name: Join swarm cluster
       command: docker swarm join --listen-addr {{ ansible_eth1.ipv4.address }}:{{ SWARM_MASTER_PORT }} {{ SWARM_MASTER_IP }}:{{ SWARM_MASTER_PORT }} --secret="foo"
