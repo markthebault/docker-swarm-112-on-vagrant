@@ -9,6 +9,7 @@
 BOXE_IMG="ubuntu/trusty64"
 SWARM_MASTER_IP="192.168.33.10"
 SWARM_MASTER_PORT=2377
+BOX_RAM="768"
 
 Vagrant.require_version ">= 1.8.1"
 
@@ -30,18 +31,21 @@ Vagrant.configure(2) do |config|
       master.vm.box = BOXE_IMG
       master.vm.network "private_network", ip: SWARM_MASTER_IP
       master.vm.hostname = "master"
+      master.memory = BOX_RAM
   end
 
   config.vm.define "node1" do |node1|
       node1.vm.box = BOXE_IMG
       node1.vm.network "private_network", ip: "192.168.33.11"
       node1.vm.hostname = "node1"
+      master.memory = BOX_RAM
   end
 
   config.vm.define "node2" do |node2|
       node2.vm.box = BOXE_IMG
       node2.vm.network "private_network", ip: "192.168.33.12"
       node2.vm.hostname = "node2"
+      master.memory = BOX_RAM
   end
 
 
