@@ -8,3 +8,6 @@ This mean of this project if to demonstrate capabilites of docker swarm 1.12 on 
 
 ## run the environment
 To start using the cluster just use `vagrant up`
+
+## Clean the environment
+To delete every thing made by this project just run the following command `vagrant destroy`
