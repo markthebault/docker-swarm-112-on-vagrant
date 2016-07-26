@@ -10,12 +10,18 @@ This mean of this project if to demonstrate capabilites of docker swarm 1.12 on 
 ## Run the environment
 To start using the cluster just use `vagrant up`
 
+## How to use it
+- To start using your new cluster, just connect to the master `vagrant ssh master`
+- Run whatever docker service you want `sudo docker service create ...`
+- See [docker Swarm 1.12 documentation](https://docs.docker.com/engine/swarm/swarm-tutorial/deploy-service/) to have more specifics
+
 ## Running an Example
 - This example will just start an HelloWorld Container [Image can be found here](https://github.com/tutumcloud/hello-world)
 - Connect to the master node `vagrant ssh master`
 - Run the docker command `sudo docker service create --replicas 4 --name helloworld -p 8081:80 tutum/hello-world`
 - Go on the URL `192.169.33.10:8081` and you will see "Hello World"
 ![alt tag](https://raw.githubusercontent.com/marco565/test-docker-swarm/master/doc-images/helloworld-result.png)
+
 - Go back on the UI of swarm `192.169.33.10:3000` and you will see 4 containers
 ![alt tag](https://raw.githubusercontent.com/marco565/test-docker-swarm/master/doc-images/swarm-result.png)
 
