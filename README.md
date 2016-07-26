@@ -15,9 +15,9 @@ To start using the cluster just use `vagrant up`
 - Connect to the master node `vagrant ssh master`
 - Run the docker command `sudo docker service create --replicas 4 --name helloworld -p 8081:80 tutum/hello-world`
 - Go on the URL `192.169.33.10:8081` and you will see "Hello World"
-![alt tag](https://raw.githubusercontent.com/marco565/test-docker-swarm/master/doc-images/helloworld-result.png =300x)
+![alt tag](https://raw.githubusercontent.com/marco565/test-docker-swarm/master/doc-images/helloworld-result.png)
 - Go back on the UI of swarm `192.169.33.10:3000` and you will see 4 containers
-![alt tag](https://raw.githubusercontent.com/marco565/test-docker-swarm/master/doc-images/swarm-result.png =300x)
+![alt tag](https://raw.githubusercontent.com/marco565/test-docker-swarm/master/doc-images/swarm-result.png)
 
 ## Clean the environment
 To delete every thing made by this project just run the following command `vagrant destroy`
